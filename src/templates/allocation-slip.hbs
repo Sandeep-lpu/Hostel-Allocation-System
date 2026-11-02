@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hostel Allocation Slip - {{studentId}}</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      color: #1a202c;
+      padding: 40px;
+      margin: 0;
+    }
+    .header {
+      border-bottom: 2px solid #2b6cb0;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    .header h1 {
+      margin: 0 0 6px 0;
+      color: #2b6cb0;
+      font-size: 24px;
+    }
+    .header p {
+      margin: 0;
+      color: #718096;
+      font-size: 13px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: bold;
+      background-color: #c6f6d5;
+      color: #22543d;
+      margin-top: 8px;
+    }
+    .grid {
+      display: table;
+      width: 100%;
+      margin-top: 20px;
+    }
+    .row {
+      display: table-row;
+    }
+    .cell-label {
+      display: table-cell;
+      font-weight: 600;
+      padding: 8px 12px 8px 0;
+      width: 30%;
+      color: #4a5568;
+      border-bottom: 1px solid #edf2f7;
+    }
+    .cell-value {
+      display: table-cell;
+      padding: 8px 0;
+      color: #1a202c;
+      border-bottom: 1px solid #edf2f7;
+    }
+    .footer {
+      margin-top: 50px;
+      padding-top: 16px;
+      border-top: 1px dashed #cbd5e0;
+      font-size: 11px;
+      color: #a0aec0;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>HOSTEL ALLOCATION CONFIRMATION SLIP</h1>
+    <p>Issued by Campus Accommodation Directorate</p>
+    <div class="badge">ALLOCATED & CONFIRMED</div>
+  </div>
+
+  <div class="grid">
+    <div class="row">
+      <div class="cell-label">Student ID:</div>
+      <div class="cell-value">{{studentId}}</div>
+    </div>
+    <div class="row">
+      <div class="cell-label">Full Name:</div>
+      <div class="cell-value">{{fullName}}</div>
+    </div>
+    <div class="row">
+      <div class="cell-label">Hostel Assigned:</div>
+      <div class="cell-value">{{hostelName}} ({{hostelCode}})</div>
+    </div>
+    <div class="row">
+      <div class="cell-label">Room Number:</div>
+      <div class="cell-value">{{roomNumber}}</div>
+    </div>
+    <div class="row">
+      <div class="cell-label">Bed Identifier:</div>
+      <div class="cell-value">{{bedNumber}}</div>
+    </div>
+    <div class="row">
+      <div class="cell-label">Allocation Date:</div>
+      <div class="cell-value">{{allocatedAt}}</div>
+    </div>
+    <div class="row">
+      <div class="cell-label">Allocation Reference:</div>
+      <div class="cell-value">{{allocationRef}}</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    This document was generated automatically by the Hostel Allocation Engine with high-concurrency verification.<br>
+    Please present this slip along with your Student ID Card upon arrival at the warden office.
+  </div>
+</body>
+</html>

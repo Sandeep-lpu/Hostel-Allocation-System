@@ -1,0 +1,5 @@
+export enum MemberStatus {
+  INVITED = 'INVITED',
+  ACCEPTED_AND_UNDERTAKEN = 'ACCEPTED_AND_UNDERTAKEN',
+}
+

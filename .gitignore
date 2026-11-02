@@ -1,0 +1,30 @@
+# Compiled output
+/dist
+/node_modules
+frontend/node_modules
+frontend/.next
+frontend/.env.local
+
+# Environment
+.env
+!.env.example
+
+# Storage and logs
+/storage/documents/*
+!/storage/documents/.gitkeep
+/logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

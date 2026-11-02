@@ -1,0 +1,90 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: hostel_mongodb
+    restart: unless-stopped
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - mongo_config:/data/configdb
+    environment:
+      MONGO_INITDB_DATABASE: hostel_allocation
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --port 27017 --eval \"db.adminCommand('ping')\" || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    networks:
+      - hostel_network
+
+  mongo-init:
+    image: mongo:7.0
+    container_name: hostel_mongo_init
+    restart: "no"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - hostel_network
+    entrypoint:
+      - bash
+      - -c
+      - |
+        echo "Waiting for MongoDB node to be ready..."
+        mongosh --host mongodb:27017 --eval '
+          try {
+            var status = rs.status();
+            if (status.ok === 1) {
+              print("Replica set rs0 is already initiated.");
+              quit(0);
+            }
+          } catch (e) {
+            print("Initiating replica set rs0...");
+            var cfg = {
+              _id: "rs0",
+              members: [
+                { _id: 0, host: "localhost:27017", priority: 1 }
+              ]
+            };
+            var res = rs.initiate(cfg);
+            printjson(res);
+            if (res.ok === 1 || res.codeName === "AlreadyInitialized") {
+              print("Replica set rs0 successfully initiated!");
+              quit(0);
+            }
+            quit(1);
+          }
+        '
+
+  redis:
+    image: redis:7-alpine
+    container_name: hostel_redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "512mb", "--maxmemory-policy", "noeviction"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - hostel_network
+
+volumes:
+  mongo_data:
+    name: hostel_mongo_data
+  mongo_config:
+    name: hostel_mongo_config
+  redis_data:
+    name: hostel_redis_data
+
+networks:
+  hostel_network:
+    name: hostel_network
+    driver: bridge

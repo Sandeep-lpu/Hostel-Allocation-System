@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Official Hostel Allotment Slip - {{rollNumber}}</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 12mm 15mm 15mm 15mm;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1a202c;
+      background: #ffffff;
+      margin: 0;
+      padding: 0;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .container {
+      width: 100%;
+      border: 1px solid #cbd5e0;
+      padding: 24px;
+      border-radius: 8px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #2b6cb0;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+    .header-text h1 {
+      margin: 0;
+      font-size: 20px;
+      color: #2b6cb0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .header-text h2 {
+      margin: 4px 0 0 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: #4a5568;
+    }
+    .qr-box {
+      text-align: right;
+    }
+    .qr-box img {
+      width: 95px;
+      height: 95px;
+      border: 1px solid #e2e8f0;
+      padding: 3px;
+      border-radius: 4px;
+    }
+    .badge-confirmed {
+      display: inline-block;
+      background-color: #c6f6d5;
+      color: #22543d;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 6px;
+    }
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #2d3748;
+      background: #edf2f7;
+      padding: 6px 12px;
+      border-left: 4px solid #2b6cb0;
+      margin: 16px 0 10px 0;
+      text-transform: uppercase;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12px;
+    }
+    table.data-table th, table.data-table td {
+      border: 1px solid #e2e8f0;
+      padding: 8px 12px;
+      font-size: 12px;
+      text-align: left;
+    }
+    table.data-table th {
+      background-color: #f7fafc;
+      color: #4a5568;
+      width: 32%;
+      font-weight: 600;
+    }
+    table.data-table td {
+      color: #1a202c;
+      font-weight: 500;
+    }
+    .financial-box {
+      background: #f7fafc;
+      border: 1px dashed #cbd5e0;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-top: 14px;
+    }
+    .financial-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      font-size: 12px;
+    }
+    .financial-total {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 14px;
+      border-top: 1px solid #cbd5e0;
+      padding-top: 6px;
+      margin-top: 6px;
+      color: #2b6cb0;
+    }
+    .undertaking-box {
+      margin-top: 16px;
+      border: 1px solid #feebc8;
+      background-color: #fffaf0;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 11px;
+      color: #7b341e;
+    }
+    .undertaking-box strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #9c4221;
+    }
+    .footer {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #718096;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 12px;
+    }
+    .stamp-box {
+      text-align: center;
+      border: 1px dashed #718096;
+      padding: 8px 16px;
+      font-size: 10px;
+      color: #4a5568;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-text">
+        <h1>Campus Accommodation Directorate</h1>
+        <h2>University Residential Facilities Booking — Session {{academicSession}}</h2>
+        <span class="badge-confirmed">Allotment Confirmed & Verified</span>
+      </div>
+      <div class="qr-box">
+        <img src="{{qrCodeDataUrl}}" alt="Tamper-Proof Verification QR">
+        <div style="font-size: 9px; color: #718096; margin-top: 2px;">Scan to Verify</div>
+      </div>
+    </div>
+
+    <!-- Student Details -->
+    <div class="section-title">1. Resident Student Profile</div>
+    <table class="data-table">
+      <tr>
+        <th>Full Name</th>
+        <td>{{studentName}}</td>
+        <th>Roll Number / Student ID</th>
+        <td>{{rollNumber}}</td>
+      </tr>
+      <tr>
+        <th>Registered Mobile</th>
+        <td>{{mobile}}</td>
+        <th>University Email</th>
+        <td>{{email}}</td>
+      </tr>
+    </table>
+
+    <!-- Residential Booking Details -->
+    <div class="section-title">2. Residential Facility Details</div>
+    <table class="data-table">
+      <tr>
+        <th>Hostel Assigned</th>
+        <td>{{hostelName}} ({{blockCode}})</td>
+        <th>Seater Configuration</th>
+        <td>{{seaterType}}</td>
+      </tr>
+      <tr>
+        <th>Allotted Room & Bed</th>
+        <td style="font-weight: 700; color: #2b6cb0;">{{roomNumber}} — {{bedLabel}}</td>
+        <th>Floor</th>
+        <td>Floor {{floor}}</td>
+      </tr>
+      <tr>
+        <th>Availing Food Service</th>
+        <td>{{#if availingFood}}Yes{{else}}No{{/if}}</td>
+        <th>Meal Type</th>
+        <td>{{mealType}}</td>
+      </tr>
+      <tr>
+        <th>Food Type / Cuisine</th>
+        <td>{{foodType}}</td>
+        <th>Mess Name & Location</th>
+        <td>{{messName}}</td>
+      </tr>
+      <tr>
+        <th>Availing Laundry Package</th>
+        <td>{{#if availingLaundry}}Yes (INR 5,400 included){{else}}No{{/if}}</td>
+        <th>Availing Fitness / Gym</th>
+        <td>{{#if availingGym}}Yes (INR 5,000 included){{else}}No{{/if}}</td>
+      </tr>
+    </table>
+
+    <!-- Financial Breakdown -->
+    <div class="section-title">3. Fee Assessment & Transaction Ledger</div>
+    <div class="financial-box">
+      <div class="financial-row">
+        <span>Annual Room & Infrastructure Fee:</span>
+        <span>INR {{baseFee}}</span>
+      </div>
+      {{#if previousPaidFee}}
+      <div class="financial-row">
+        <span>Previous Allocation Credit (Transferred):</span>
+        <span>- INR {{previousPaidFee}}</span>
+      </div>
+      {{/if}}
+      <div class="financial-row">
+        <span>Differential Room Fee Assessed:</span>
+        <span>INR {{differentialRoomFee}}</span>
+      </div>
+      <div class="financial-row">
+        <span>Annual Laundry Subscription:</span>
+        <span>INR {{laundryFee}}</span>
+      </div>
+      <div class="financial-row">
+        <span>Gymnasium & Fitness Membership:</span>
+        <span>INR {{gymFee}}</span>
+      </div>
+      <div class="financial-total">
+        <span>Total Payable / Remitted:</span>
+        <span>INR {{totalPayable}}</span>
+      </div>
+      <div style="font-size: 11px; color: #718096; margin-top: 8px;">
+        Payment Status: <strong>PAID & SETTLED</strong> &nbsp;|&nbsp; Txn Ref: <strong>{{transactionRef}}</strong> &nbsp;|&nbsp; Date: <strong>{{allotmentDate}}</strong>
+      </div>
+    </div>
+
+    <!-- Undertaking -->
+    <div class="undertaking-box">
+      <strong>Signed Undertaking Declaration:</strong>
+      "I hereby undertake to pay the difference in amount, if any, due to the seater change requested by me and agree to abide by the university residential statutes, anti-ragging policies, and warden guidelines."
+      <div style="margin-top: 4px; font-size: 10px; color: #9c4221;">
+        Digitally signed and accepted by resident student on {{allotmentDate}}.
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div>
+        Security Hash: <code>{{tamperProofSignature}}</code><br>
+        Document ID: <code>{{cartId}}</code> | System Generated: {{generatedTimestamp}}
+      </div>
+      <div class="stamp-box">
+        CHIEF WARDEN & DIRECTORATE<br>
+        OFFICIALLY ENDORSED & SEALED
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
