@@ -73,3 +73,4 @@ export class RoommateProfile {
 }
 
 export const RoommateProfileSchema = SchemaFactory.createForClass(RoommateProfile);
+

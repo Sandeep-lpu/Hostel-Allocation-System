@@ -54,6 +54,10 @@ export default async function StudentDashboardPage() {
     (a: any) => a.studentRollNumber?.toUpperCase() === student.rollNumber?.toUpperCase(),
   );
 
+  // Fetch student waitlist status for Phase 5
+  const wlRes = await fetchFromBackend<any>(`/allocation/waiting-list/status/${student.rollNumber}`);
+  const waitlistStatus = wlRes.ok ? wlRes.data : null;
+
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-between">
       {/* Top Navbar */}
@@ -409,8 +413,84 @@ export default async function StudentDashboardPage() {
                     <span>Provisional Allotment: {myAssignment.assignedBlockCode} • Room {myAssignment.assignedRoomNumber}</span>
                   </div>
                 </div>
+              ) : waitlistStatus?.isOnWaitlist && waitlistStatus.status === 'PROMOTED' && waitlistStatus.promotedDetails ? (
+                /* State C: Promoted from Waiting List */
+                <div className="space-y-4">
+                  <div className="rounded-2xl bg-emerald-50/70 border border-emerald-200 p-4 space-y-2">
+                    <div className="flex items-center space-x-2 text-emerald-900 font-black text-sm">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                      <span>Promoted From Priority Waiting List!</span>
+                    </div>
+                    <p className="text-xs text-emerald-800">
+                      A vacant bed in your preferred hostel block became available and was automatically allocated to your profile based on your priority rank.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="rounded-2xl border border-slate-100 bg-slate-50 p-3">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                        Hostel Block
+                      </span>
+                      <p className="mt-1 font-mono text-sm font-black text-slate-900">
+                        {waitlistStatus.promotedDetails.blockCode}
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl border border-slate-100 bg-slate-50 p-3">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                        Allocated Room
+                      </span>
+                      <p className="mt-1 font-mono text-sm font-black text-slate-900">
+                        Room {waitlistStatus.promotedDetails.roomNumber}
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl border border-rose-100 bg-rose-50/50 p-3">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-rose-500">
+                        Designated Bed
+                      </span>
+                      <p className="mt-1 font-mono text-sm font-black text-rose-600">
+                        {waitlistStatus.promotedDetails.bedLabel}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : waitlistStatus?.isOnWaitlist && waitlistStatus.status === 'WAITING' ? (
+                /* State D: Active Waiting List Position */
+                <div className="rounded-2xl border border-amber-200 bg-amber-50/50 p-6 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="flex h-12 w-12 flex-col items-center justify-center rounded-2xl bg-amber-100 text-amber-900 border border-amber-300 font-mono shadow-2xs">
+                        <span className="text-[9px] uppercase font-bold tracking-wider leading-none">Rank</span>
+                        <span className="text-lg font-black leading-none mt-0.5">#{waitlistStatus.rank}</span>
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-black text-amber-950">
+                          Priority Waiting List Active
+                        </h3>
+                        <p className="text-xs text-amber-800">
+                          Total Candidates Waiting in Pool: <span className="font-bold">{waitlistStatus.totalWaitingInPool}</span>
+                        </p>
+                      </div>
+                    </div>
+
+                    <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-bold text-amber-800 border border-amber-200">
+                      Quota: {waitlistStatus.entry?.category}
+                    </span>
+                  </div>
+
+                  <div className="rounded-xl bg-white/80 p-3 border border-amber-200/80 text-xs text-amber-900 space-y-1">
+                    <p className="font-bold">Waitlist Details:</p>
+                    <p className="text-amber-800 text-[11px]">{waitlistStatus.entry?.reason}</p>
+                  </div>
+
+                  <div className="flex items-center space-x-2 text-[11px] text-amber-800 bg-amber-100/60 p-2.5 rounded-xl border border-amber-200">
+                    <Sparkles className="h-3.5 w-3.5 text-amber-600 shrink-0" />
+                    <span>Automatic promotion engine continuously tracks cancelled or released beds.</span>
+                  </div>
+                </div>
               ) : (
-                /* State C: Waiting for Allocation Run */
+                /* State E: Waiting for Allocation Run */
                 <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 p-8 text-center space-y-3">
                   <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white border border-slate-200 text-slate-400 shadow-xs">
                     <Bed className="h-6 w-6" />

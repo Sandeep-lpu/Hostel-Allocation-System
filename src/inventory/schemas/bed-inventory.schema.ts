@@ -50,6 +50,12 @@ export class BedInventory {
   @Prop({ type: Types.ObjectId, ref: 'StudentProfile', default: null })
   allocatedTo?: Types.ObjectId | null;
 
+  @Prop({ trim: true, uppercase: true })
+  assignedStudentRollNumber?: string;
+
+  @Prop({ trim: true })
+  assignedStudentName?: string;
+
   @Prop({ default: null, index: true })
   lockExpiresAt?: Date | null;
 

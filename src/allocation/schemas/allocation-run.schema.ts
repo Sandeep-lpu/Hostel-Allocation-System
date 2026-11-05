@@ -129,6 +129,9 @@ export class WaitingListEntry {
   @Prop({ required: true })
   studentName: string;
 
+  @Prop({ required: true, enum: Gender, default: Gender.MALE })
+  gender?: Gender;
+
   @Prop({ required: true })
   cgpa: number;
 
@@ -137,6 +140,57 @@ export class WaitingListEntry {
 
   @Prop({ required: true })
   reason: string;
+
+  @Prop({ default: 'BH-01' })
+  preferredBlockCode?: string;
+
+  @Prop({ required: true, default: 'WAITING' })
+  status?: 'WAITING' | 'PROMOTED' | 'DECLINED' | 'EXPIRED';
+
+  @Prop()
+  promotedAt?: Date;
+
+  @Prop()
+  promotedToBlockCode?: string;
+
+  @Prop()
+  promotedToRoomNumber?: string;
+
+  @Prop()
+  promotedToBedLabel?: string;
+
+  @Prop({ default: () => new Date() })
+  addedAt?: Date;
+}
+
+@Schema({ _id: false })
+export class WaitingListMovementEntry {
+  @Prop({ required: true, uppercase: true })
+  studentRollNumber: string;
+
+  @Prop({ required: true })
+  studentName: string;
+
+  @Prop({ required: true })
+  previousRank: number;
+
+  @Prop({ required: true })
+  promotedToBlockCode: string;
+
+  @Prop({ required: true })
+  promotedToRoomNumber: string;
+
+  @Prop({ required: true })
+  promotedToBedLabel: string;
+
+  @Prop({ required: true, default: 'MANUAL_PROMOTION' })
+  actionType: string; // 'MANUAL_PROMOTION' | 'AUTO_PROMOTION' | 'VACANCY_FILL'
+
+  @Prop({ required: true })
+  authorizedBy: string;
+
+  @Prop({ default: () => new Date() })
+  timestamp: Date;
 }
 
 @Schema({ _id: false })
@@ -217,6 +271,9 @@ export class AllocationRun {
 
   @Prop({ type: [WaitingListEntry], default: [] })
   waitingList: WaitingListEntry[];
+
+  @Prop({ type: [WaitingListMovementEntry], default: [] })
+  waitingListMovementLog: WaitingListMovementEntry[];
 
   @Prop({ type: [WardenOverrideEntry], default: [] })
   overrideHistory: WardenOverrideEntry[];

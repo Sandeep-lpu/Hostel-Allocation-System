@@ -13,6 +13,7 @@ import {
 } from '../application/schemas/allocation-cycle.schema';
 import { BedInventory, BedInventorySchema } from '../inventory/schemas/bed-inventory.schema';
 import { AllocationEngineService } from './services/allocation-engine.service';
+import { WaitingListService } from './services/waiting-list.service';
 import { AllocationController } from './allocation.controller';
 
 @Module({
@@ -29,7 +30,7 @@ import { AllocationController } from './allocation.controller';
     }),
   ],
   controllers: [AllocationController],
-  providers: [AllocationEngineService],
-  exports: [AllocationEngineService, MongooseModule],
+  providers: [AllocationEngineService, WaitingListService],
+  exports: [AllocationEngineService, WaitingListService, MongooseModule],
 })
 export class AllocationModule {}

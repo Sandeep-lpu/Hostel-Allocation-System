@@ -9,10 +9,14 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { AllocationEngineService } from './services/allocation-engine.service';
+import { WaitingListService } from './services/waiting-list.service';
 
 @Controller('allocation')
 export class AllocationController {
-  constructor(private readonly allocationService: AllocationEngineService) {}
+  constructor(
+    private readonly allocationService: AllocationEngineService,
+    private readonly waitingListService: WaitingListService,
+  ) {}
 
   /**
    * Start new allocation run (Deterministic, seed-based)
@@ -174,5 +178,97 @@ export class AllocationController {
     @Query('tenantId') tenantId?: string,
   ) {
     return this.allocationService.getOverrideHistory(tenantId, runId);
+  }
+
+  // ==========================================
+  // PHASE 5: WAITING LIST & AUTO-PROMOTION
+  // ==========================================
+
+  /**
+   * Admin/Warden: Get Active Waiting List with priority rankings & movement log
+   */
+  @Get('waiting-list')
+  async getWaitingList(
+    @Query('runId') runId?: string,
+    @Query('tenantId') tenantId?: string,
+  ) {
+    return this.waitingListService.getWaitingList(tenantId, runId);
+  }
+
+  /**
+   * Admin/Warden: Track Real-Time Bed Vacancies
+   */
+  @Get('waiting-list/vacancies')
+  async getAvailableVacancies(
+    @Query('blockCode') blockCode?: string,
+    @Query('tenantId') tenantId?: string,
+  ) {
+    return this.waitingListService.getAvailableVacancies(tenantId, blockCode);
+  }
+
+  /**
+   * Student Portal: Real-time Waiting List Position & Vacancy Forecast
+   */
+  @Get('waiting-list/status/:rollNumber')
+  async getStudentWaitlistStatus(
+    @Param('rollNumber') rollNumber: string,
+    @Query('tenantId') tenantId?: string,
+  ) {
+    return this.waitingListService.getStudentWaitlistStatus(tenantId, rollNumber);
+  }
+
+  /**
+   * Admin/Warden: Promote specific waiting student into a vacant bed
+   */
+  @Post('waiting-list/promote')
+  @HttpCode(HttpStatus.OK)
+  async promoteStudent(
+    @Body()
+    body: {
+      runId?: string;
+      studentRollNumber: string;
+      targetBlockCode?: string;
+      targetRoomNumber?: string;
+      targetBedLabel?: string;
+      authorizedBy: string;
+    },
+    @Query('tenantId') tenantId?: string,
+  ) {
+    return this.waitingListService.promoteStudent(tenantId, body);
+  }
+
+  /**
+   * Admin/Warden: 1-Click Auto-Promote All Vacancies sequentially
+   */
+  @Post('waiting-list/auto-promote')
+  @HttpCode(HttpStatus.OK)
+  async autoPromoteAll(
+    @Body() body: { authorizedBy?: string },
+    @Query('tenantId') tenantId?: string,
+  ) {
+    return this.waitingListService.autoPromoteAllVacancies(
+      tenantId,
+      body.authorizedBy || 'warden@univ-delhi.ac.in',
+    );
+  }
+
+  /**
+   * Admin/Warden: Release / Cancel occupied bed (triggers vacancy)
+   */
+  @Post('waiting-list/release-bed')
+  @HttpCode(HttpStatus.OK)
+  async releaseBed(
+    @Body()
+    body: {
+      blockCode: string;
+      roomNumber: string;
+      bedLabel: string;
+      reason: string;
+      releasedBy: string;
+      autoPromoteNext?: boolean;
+    },
+    @Query('tenantId') tenantId?: string,
+  ) {
+    return this.waitingListService.releaseBed(tenantId, body);
   }
 }

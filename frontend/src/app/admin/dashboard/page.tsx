@@ -125,89 +125,110 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* 4 Feature Milestone Banners */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* 5 Feature Milestone Banners */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5">
           {/* Phase 1: Visual Bed Map */}
-          <div className="rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-600 p-5 text-white shadow-md flex flex-col justify-between space-y-4">
-            <div className="space-y-1.5">
-              <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white border border-white/20">
+          <div className="rounded-3xl border border-indigo-200 bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-600 p-4 text-white shadow-md flex flex-col justify-between space-y-3">
+            <div className="space-y-1">
+              <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2 py-0.5 text-[9px] font-bold text-white border border-white/20">
                 <Sparkles className="h-3 w-3 text-amber-300" />
                 <span>Phase 1 • Inventory</span>
               </div>
-              <h2 className="text-base font-black tracking-tight">Visual Bed Map</h2>
-              <p className="text-xs text-indigo-100">
+              <h2 className="text-sm font-black tracking-tight">Visual Bed Map</h2>
+              <p className="text-[11px] text-indigo-100">
                 572 beds across BH-01 & GH-01 with floor-wise matrix and status controls.
               </p>
             </div>
             <Link
               href="/admin/inventory"
-              className="inline-flex items-center justify-between rounded-2xl bg-white px-3.5 py-2 text-xs font-black text-indigo-900 shadow-xs hover:bg-indigo-50 transition-all w-fit space-x-2"
+              className="inline-flex items-center justify-between rounded-xl bg-white px-3 py-1.5 text-xs font-black text-indigo-900 shadow-xs hover:bg-indigo-50 transition-all w-fit space-x-1.5"
             >
               <span>Bed Matrix</span>
-              <ArrowRight className="h-3.5 w-3.5" />
+              <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
 
           {/* Phase 2: Application & Admission Management */}
-          <div className="rounded-3xl border border-purple-200 bg-gradient-to-br from-purple-600 via-indigo-600 to-indigo-700 p-5 text-white shadow-md flex flex-col justify-between space-y-4">
-            <div className="space-y-1.5">
-              <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white border border-white/20">
+          <div className="rounded-3xl border border-purple-200 bg-gradient-to-br from-purple-600 via-indigo-600 to-indigo-700 p-4 text-white shadow-md flex flex-col justify-between space-y-3">
+            <div className="space-y-1">
+              <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2 py-0.5 text-[9px] font-bold text-white border border-white/20">
                 <Sparkles className="h-3 w-3 text-emerald-300" />
                 <span>Phase 2 • Admissions</span>
               </div>
-              <h2 className="text-base font-black tracking-tight">Applications</h2>
-              <p className="text-xs text-indigo-100">
-                Verify student eligibility, documents, CGPA, and configure admission cycles.
+              <h2 className="text-sm font-black tracking-tight">Applications</h2>
+              <p className="text-[11px] text-indigo-100">
+                Verify student eligibility, documents, CGPA, and admission cycles.
               </p>
             </div>
             <Link
               href="/admin/applications"
-              className="inline-flex items-center justify-between rounded-2xl bg-white px-3.5 py-2 text-xs font-black text-purple-900 shadow-xs hover:bg-purple-50 transition-all w-fit space-x-2"
+              className="inline-flex items-center justify-between rounded-xl bg-white px-3 py-1.5 text-xs font-black text-purple-900 shadow-xs hover:bg-purple-50 transition-all w-fit space-x-1.5"
             >
               <span>Verify Records</span>
-              <ArrowRight className="h-3.5 w-3.5" />
+              <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
 
           {/* Phase 3: Allocation Engine Cockpit */}
-          <div className="rounded-3xl border border-emerald-200 bg-gradient-to-br from-emerald-600 via-teal-600 to-indigo-700 p-5 text-white shadow-md flex flex-col justify-between space-y-4">
-            <div className="space-y-1.5">
-              <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white border border-white/20">
+          <div className="rounded-3xl border border-emerald-200 bg-gradient-to-br from-emerald-600 via-teal-600 to-indigo-700 p-4 text-white shadow-md flex flex-col justify-between space-y-3">
+            <div className="space-y-1">
+              <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2 py-0.5 text-[9px] font-bold text-white border border-white/20">
                 <Sparkles className="h-3 w-3 text-amber-300" />
                 <span>Phase 3 • Engine</span>
               </div>
-              <h2 className="text-base font-black tracking-tight">Allocation Engine</h2>
-              <p className="text-xs text-emerald-100">
+              <h2 className="text-sm font-black tracking-tight">Allocation Engine</h2>
+              <p className="text-[11px] text-emerald-100">
                 Deterministic matching engine with seed reproducibility and roommate scoring.
               </p>
             </div>
             <Link
               href="/admin/allocation"
-              className="inline-flex items-center justify-between rounded-2xl bg-white px-3.5 py-2 text-xs font-black text-emerald-900 shadow-xs hover:bg-emerald-50 transition-all w-fit space-x-2"
+              className="inline-flex items-center justify-between rounded-xl bg-white px-3 py-1.5 text-xs font-black text-emerald-900 shadow-xs hover:bg-emerald-50 transition-all w-fit space-x-1.5"
             >
               <span>Run Engine</span>
-              <ArrowRight className="h-3.5 w-3.5" />
+              <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
 
           {/* Phase 4: Warden Review & Governance */}
-          <div className="rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-600 via-orange-600 to-indigo-700 p-5 text-white shadow-md flex flex-col justify-between space-y-4">
-            <div className="space-y-1.5">
-              <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white border border-white/20">
+          <div className="rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-600 via-orange-600 to-indigo-700 p-4 text-white shadow-md flex flex-col justify-between space-y-3">
+            <div className="space-y-1">
+              <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2 py-0.5 text-[9px] font-bold text-white border border-white/20">
                 <Sparkles className="h-3 w-3 text-indigo-200" />
-                <span>Phase 4 • Governance</span>
+                <span>Phase 4 • Review</span>
               </div>
-              <h2 className="text-base font-black tracking-tight">Warden Review</h2>
-              <p className="text-xs text-amber-100">
+              <h2 className="text-sm font-black tracking-tight">Warden Review</h2>
+              <p className="text-[11px] text-amber-100">
                 Audit drafts, reassign rooms with mandatory reasons, and authorize publication.
               </p>
             </div>
             <Link
               href="/admin/reviews"
-              className="inline-flex items-center justify-between rounded-2xl bg-white px-3.5 py-2 text-xs font-black text-amber-900 shadow-xs hover:bg-amber-50 transition-all w-fit space-x-2"
+              className="inline-flex items-center justify-between rounded-xl bg-white px-3 py-1.5 text-xs font-black text-amber-900 shadow-xs hover:bg-amber-50 transition-all w-fit space-x-1.5"
             >
               <span>Warden Cockpit</span>
-              <ArrowRight className="h-3.5 w-3.5" />
+              <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+
+          {/* Phase 5: Waiting List Priority Ranking */}
+          <div className="rounded-3xl border border-rose-200 bg-gradient-to-br from-rose-500 via-pink-600 to-indigo-700 p-4 text-white shadow-md flex flex-col justify-between space-y-3">
+            <div className="space-y-1">
+              <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2 py-0.5 text-[9px] font-bold text-white border border-white/20">
+                <Sparkles className="h-3 w-3 text-amber-200" />
+                <span>Phase 5 • Waitlist</span>
+              </div>
+              <h2 className="text-sm font-black tracking-tight">Waiting List</h2>
+              <p className="text-[11px] text-rose-100">
+                Priority rankings, real-time bed vacancies, and 1-click automatic promotions.
+              </p>
+            </div>
+            <Link
+              href="/admin/waiting-list"
+              className="inline-flex items-center justify-between rounded-xl bg-white px-3 py-1.5 text-xs font-black text-rose-900 shadow-xs hover:bg-rose-50 transition-all w-fit space-x-1.5"
+            >
+              <span>Waitlist Hub</span>
+              <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
         </div>
