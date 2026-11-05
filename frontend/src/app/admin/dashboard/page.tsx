@@ -126,7 +126,7 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Milestone Action Banners */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* Phase 1: Visual Bed Map */}
           <div className="rounded-3xl border border-indigo-200 bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 p-6 text-white shadow-md flex flex-col justify-between space-y-4">
             <div className="space-y-1.5">
@@ -153,9 +153,9 @@ export default async function AdminDashboardPage() {
             <div className="space-y-1.5">
               <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white border border-white/20">
                 <Sparkles className="h-3 w-3 text-emerald-300" />
-                <span>Phase 2 • Applications & Verification</span>
+                <span>Phase 2 • Applications</span>
               </div>
-              <h2 className="text-lg font-black tracking-tight">Application & Admission Management</h2>
+              <h2 className="text-lg font-black tracking-tight">Application Verification</h2>
               <p className="text-xs text-indigo-100">
                 Audit student applications, verify credentials & documents, and configure eligibility policies.
               </p>
@@ -164,7 +164,28 @@ export default async function AdminDashboardPage() {
               href="/admin/applications"
               className="inline-flex items-center justify-between rounded-2xl bg-white px-4 py-2.5 text-xs font-black text-purple-900 shadow-xs hover:bg-purple-50 transition-all w-fit space-x-2"
             >
-              <span>Review Applications & Policies</span>
+              <span>Review Applications</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          {/* Phase 3: Allocation Engine Cockpit */}
+          <div className="rounded-3xl border border-emerald-200 bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-700 p-6 text-white shadow-md flex flex-col justify-between space-y-4">
+            <div className="space-y-1.5">
+              <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white border border-white/20">
+                <Sparkles className="h-3 w-3 text-amber-300" />
+                <span>Phase 3 • Engine</span>
+              </div>
+              <h2 className="text-lg font-black tracking-tight">Allocation Engine Cockpit</h2>
+              <p className="text-xs text-emerald-100">
+                Generate draft allocations with deterministic seeds, quota constraints, and transparent student explanations.
+              </p>
+            </div>
+            <Link
+              href="/admin/allocation"
+              className="inline-flex items-center justify-between rounded-2xl bg-white px-4 py-2.5 text-xs font-black text-emerald-900 shadow-xs hover:bg-emerald-50 transition-all w-fit space-x-2"
+            >
+              <span>Open Allocation Engine</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

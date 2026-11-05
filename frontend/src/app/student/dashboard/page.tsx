@@ -133,25 +133,25 @@ export default async function StudentDashboardPage() {
           </div>
         </div>
 
-        {/* Phase 1 & Phase 2 Action Banners */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {/* Phase 1, Phase 2 & Phase 3 Action Banners */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* Phase 1: Explore Hostels & Fees */}
           <div className="rounded-3xl border border-rose-200 bg-gradient-to-r from-rose-500 via-pink-500 to-indigo-600 p-6 text-white shadow-md flex flex-col justify-between space-y-4">
             <div className="space-y-1.5">
               <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white border border-white/20">
                 <Sparkles className="h-3 w-3 text-amber-300" />
-                <span>Phase 1 • Infrastructure Explorer</span>
+                <span>Phase 1 • Explorer</span>
               </div>
-              <h2 className="text-lg font-black tracking-tight">Hostel Blocks & Fees Catalog</h2>
+              <h2 className="text-lg font-black tracking-tight">Hostel Blocks & Fees</h2>
               <p className="text-xs text-rose-100">
-                Browse available residences for {liveProfile.gender} students, inspect rooms, and review annual pricing schedules.
+                Browse available residences for {liveProfile.gender} students, inspect rooms, and review annual pricing.
               </p>
             </div>
             <Link
               href="/student/hostels"
               className="inline-flex items-center justify-between rounded-2xl bg-white px-4 py-2.5 text-xs font-black text-rose-900 shadow-xs hover:bg-rose-50 transition-all w-fit space-x-2"
             >
-              <span>Explore Hostels & Fees</span>
+              <span>Explore Hostels</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -162,7 +162,7 @@ export default async function StudentDashboardPage() {
               <div className="flex items-center justify-between">
                 <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white border border-white/20">
                   <Sparkles className="h-3 w-3 text-emerald-300" />
-                  <span>Phase 2 • Admission Application</span>
+                  <span>Phase 2 • Admission</span>
                 </div>
                 {application && (
                   <span
@@ -178,20 +178,41 @@ export default async function StudentDashboardPage() {
                   </span>
                 )}
               </div>
-              <h2 className="text-lg font-black tracking-tight">Hostel Application & Status</h2>
+              <h2 className="text-lg font-black tracking-tight">Application & Status</h2>
               <p className="text-xs text-indigo-100">
                 {application
                   ? `Application #${application.applicationNumber} active. Eligibility: ${
-                      application.eligibilityResult?.isOverallEligible ? 'Verified & Eligible' : 'Under Review'
+                      application.eligibilityResult?.isOverallEligible ? 'Verified' : 'Under Review'
                     }`
-                  : 'Submit your 3 ranked preferences, emergency contact, and documents for the Fall 2026 cycle.'}
+                  : 'Submit your 3 ranked preferences, emergency contact, and documents.'}
               </p>
             </div>
             <Link
               href="/student/application"
               className="inline-flex items-center justify-between rounded-2xl bg-white px-4 py-2.5 text-xs font-black text-indigo-900 shadow-xs hover:bg-indigo-50 transition-all w-fit space-x-2"
             >
-              <span>{application ? 'View Application & Scorecard' : 'Apply for Hostel Now'}</span>
+              <span>{application ? 'View Scorecard' : 'Apply Now'}</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          {/* Phase 3: Roommate Compatibility Hub */}
+          <div className="rounded-3xl border border-purple-200 bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-700 p-6 text-white shadow-md flex flex-col justify-between space-y-4">
+            <div className="space-y-1.5">
+              <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white border border-white/20">
+                <Sparkles className="h-3 w-3 text-amber-300" />
+                <span>Phase 3 • Matching</span>
+              </div>
+              <h2 className="text-lg font-black tracking-tight">Roommate Compatibility</h2>
+              <p className="text-xs text-purple-100">
+                Fill the 7-factor questionnaire (sleep schedule, study noise, room temperature) for optimal room clustering.
+              </p>
+            </div>
+            <Link
+              href="/student/roommates"
+              className="inline-flex items-center justify-between rounded-2xl bg-white px-4 py-2.5 text-xs font-black text-purple-900 shadow-xs hover:bg-purple-50 transition-all w-fit space-x-2"
+            >
+              <span>Match Questionnaire</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

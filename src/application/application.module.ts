@@ -17,3 +17,4 @@ import { ApplicationController } from './application.controller';
   exports: [ApplicationService, MongooseModule],
 })
 export class ApplicationModule {}
+

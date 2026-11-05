@@ -152,3 +152,4 @@ export class HostelApplication {
 export const HostelApplicationSchema = SchemaFactory.createForClass(HostelApplication);
 
 HostelApplicationSchema.index({ tenantId: 1, cycleCode: 1, studentRollNumber: 1 }, { unique: true });
+

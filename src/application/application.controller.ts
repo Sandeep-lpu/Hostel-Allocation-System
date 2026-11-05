@@ -121,3 +121,4 @@ export class ApplicationController {
     return this.applicationService.verifyApplication(applicationId, body);
   }
 }
+

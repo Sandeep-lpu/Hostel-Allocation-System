@@ -478,3 +478,4 @@ export class ApplicationService implements OnApplicationBootstrap {
     this.logger.log(`Seeded ${sampleApplications.length} sample applications for Phase 2!`);
   }
 }
+

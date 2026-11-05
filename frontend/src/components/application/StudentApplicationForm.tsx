@@ -722,3 +722,4 @@ export default function StudentApplicationForm({
     </div>
   );
 }
+
