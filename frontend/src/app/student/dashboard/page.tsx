@@ -42,6 +42,10 @@ export default async function StudentDashboardPage() {
   const liveProfile = liveProfileRes.ok ? liveProfileRes.data : student;
   const allocation = liveProfile?.currentAllocation || {};
 
+  // Fetch student application record for Phase 2
+  const appRes = await fetchFromBackend<any>(`/applications/my-application/${student.rollNumber}`);
+  const application = appRes.ok ? appRes.data : null;
+
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-between">
       {/* Top Navbar */}
@@ -129,28 +133,68 @@ export default async function StudentDashboardPage() {
           </div>
         </div>
 
-        {/* Phase 1 Action Banner: Explore Hostels & Rooms */}
-        <div className="rounded-3xl border border-rose-200 bg-gradient-to-r from-rose-500 via-pink-500 to-indigo-600 p-6 sm:p-7 text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-5">
-          <div className="space-y-2 max-w-xl">
-            <div className="inline-flex items-center space-x-2 rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-bold text-white border border-white/20">
-              <Sparkles className="h-3.5 w-3.5 text-amber-300" />
-              <span>Phase 1 Milestone • Live Inventory Explorer</span>
+        {/* Phase 1 & Phase 2 Action Banners */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Phase 1: Explore Hostels & Fees */}
+          <div className="rounded-3xl border border-rose-200 bg-gradient-to-r from-rose-500 via-pink-500 to-indigo-600 p-6 text-white shadow-md flex flex-col justify-between space-y-4">
+            <div className="space-y-1.5">
+              <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white border border-white/20">
+                <Sparkles className="h-3 w-3 text-amber-300" />
+                <span>Phase 1 • Infrastructure Explorer</span>
+              </div>
+              <h2 className="text-lg font-black tracking-tight">Hostel Blocks & Fees Catalog</h2>
+              <p className="text-xs text-rose-100">
+                Browse available residences for {liveProfile.gender} students, inspect rooms, and review annual pricing schedules.
+              </p>
             </div>
-            <h2 className="text-xl sm:text-2xl font-black tracking-tight">
-              Hostel Blocks & Room Categories Catalog
-            </h2>
-            <p className="text-xs sm:text-sm text-rose-100">
-              Browse available residential blocks for {liveProfile.gender} students, examine room types (Studio AC, Standard AC, Air Cooled), and review annual fee structures.
-            </p>
+            <Link
+              href="/student/hostels"
+              className="inline-flex items-center justify-between rounded-2xl bg-white px-4 py-2.5 text-xs font-black text-rose-900 shadow-xs hover:bg-rose-50 transition-all w-fit space-x-2"
+            >
+              <span>Explore Hostels & Fees</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
-          <Link
-            href="/student/hostels"
-            className="inline-flex items-center space-x-2 rounded-2xl bg-white px-5 py-3 text-xs font-black text-rose-900 shadow-md hover:bg-rose-50 transition-all shrink-0"
-          >
-            <span>Explore Hostels & Fees</span>
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+          {/* Phase 2: Hostel Application & Eligibility */}
+          <div className="rounded-3xl border border-indigo-200 bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-800 p-6 text-white shadow-md flex flex-col justify-between space-y-4">
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white border border-white/20">
+                  <Sparkles className="h-3 w-3 text-emerald-300" />
+                  <span>Phase 2 • Admission Application</span>
+                </div>
+                {application && (
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-wider ${
+                      application.status === 'VERIFIED'
+                        ? 'bg-emerald-500 text-white'
+                        : application.status === 'ACTION_REQUIRED'
+                        ? 'bg-amber-500 text-white'
+                        : 'bg-white/20 text-white'
+                    }`}
+                  >
+                    {application.status}
+                  </span>
+                )}
+              </div>
+              <h2 className="text-lg font-black tracking-tight">Hostel Application & Status</h2>
+              <p className="text-xs text-indigo-100">
+                {application
+                  ? `Application #${application.applicationNumber} active. Eligibility: ${
+                      application.eligibilityResult?.isOverallEligible ? 'Verified & Eligible' : 'Under Review'
+                    }`
+                  : 'Submit your 3 ranked preferences, emergency contact, and documents for the Fall 2026 cycle.'}
+              </p>
+            </div>
+            <Link
+              href="/student/application"
+              className="inline-flex items-center justify-between rounded-2xl bg-white px-4 py-2.5 text-xs font-black text-indigo-900 shadow-xs hover:bg-indigo-50 transition-all w-fit space-x-2"
+            >
+              <span>{application ? 'View Application & Scorecard' : 'Apply for Hostel Now'}</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
 
         {/* 2-Column Grid: Profile Details & Residential Allocation Status */}

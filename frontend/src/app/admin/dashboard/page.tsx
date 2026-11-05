@@ -125,28 +125,49 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Phase 1 Action Banner: Visual Bed Map */}
-        <div className="rounded-3xl border border-indigo-200 bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 p-6 sm:p-7 text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-5">
-          <div className="space-y-2 max-w-xl">
-            <div className="inline-flex items-center space-x-2 rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-bold text-white border border-white/20">
-              <Sparkles className="h-3.5 w-3.5 text-amber-300" />
-              <span>Phase 1 Active • Hostel Infrastructure</span>
+        {/* Milestone Action Banners */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Phase 1: Visual Bed Map */}
+          <div className="rounded-3xl border border-indigo-200 bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 p-6 text-white shadow-md flex flex-col justify-between space-y-4">
+            <div className="space-y-1.5">
+              <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white border border-white/20">
+                <Sparkles className="h-3 w-3 text-amber-300" />
+                <span>Phase 1 • Infrastructure</span>
+              </div>
+              <h2 className="text-lg font-black tracking-tight">Visual Floor-wise Bed Map</h2>
+              <p className="text-xs text-indigo-100">
+                Inspect 572 beds across BH-01 & GH-01, view rooms, and toggle warden maintenance controls.
+              </p>
             </div>
-            <h2 className="text-xl sm:text-2xl font-black tracking-tight">
-              Visual Floor-wise Bed Map & Inventory
-            </h2>
-            <p className="text-xs sm:text-sm text-indigo-100">
-              Inspect 572 beds across Boys (BH-01) & Girls (GH-01) residential blocks, check room categories, and toggle warden maintenance controls.
-            </p>
+            <Link
+              href="/admin/inventory"
+              className="inline-flex items-center justify-between rounded-2xl bg-white px-4 py-2.5 text-xs font-black text-indigo-900 shadow-xs hover:bg-indigo-50 transition-all w-fit space-x-2"
+            >
+              <span>Open Visual Bed Map</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
-          <Link
-            href="/admin/inventory"
-            className="inline-flex items-center space-x-2 rounded-2xl bg-white px-5 py-3 text-xs font-black text-indigo-900 shadow-md hover:bg-indigo-50 transition-all shrink-0"
-          >
-            <span>Open Visual Bed Map</span>
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+          {/* Phase 2: Application & Admission Management */}
+          <div className="rounded-3xl border border-purple-200 bg-gradient-to-r from-purple-600 via-indigo-600 to-indigo-700 p-6 text-white shadow-md flex flex-col justify-between space-y-4">
+            <div className="space-y-1.5">
+              <div className="inline-flex items-center space-x-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white border border-white/20">
+                <Sparkles className="h-3 w-3 text-emerald-300" />
+                <span>Phase 2 • Applications & Verification</span>
+              </div>
+              <h2 className="text-lg font-black tracking-tight">Application & Admission Management</h2>
+              <p className="text-xs text-indigo-100">
+                Audit student applications, verify credentials & documents, and configure eligibility policies.
+              </p>
+            </div>
+            <Link
+              href="/admin/applications"
+              className="inline-flex items-center justify-between rounded-2xl bg-white px-4 py-2.5 text-xs font-black text-purple-900 shadow-xs hover:bg-purple-50 transition-all w-fit space-x-2"
+            >
+              <span>Review Applications & Policies</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
 
         {/* 3 Telemetry Cards */}

@@ -32,3 +32,4 @@ export async function updateBedStatusAction(bedId: string, status: string, reaso
     return { success: false, error: err.message || 'Network error updating bed status' };
   }
 }
+

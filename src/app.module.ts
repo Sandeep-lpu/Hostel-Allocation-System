@@ -14,6 +14,7 @@ import { GroupBookingModule } from './group-booking/group-booking.module';
 import { OutboundWebhooksModule } from './outbound-webhooks/outbound-webhooks.module';
 import { ObservabilityModule } from './observability/observability.module';
 import { AuthModule } from './auth/auth.module';
+import { ApplicationModule } from './application/application.module';
 
 @Module({
   imports: [
@@ -127,6 +128,7 @@ import { AuthModule } from './auth/auth.module';
     OutboundWebhooksModule,
     ObservabilityModule,
     AuthModule,
+    ApplicationModule,
   ],
   controllers: [],
   providers: [],
