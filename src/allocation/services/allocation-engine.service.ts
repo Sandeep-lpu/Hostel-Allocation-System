@@ -7,6 +7,7 @@ import {
   AllocationRunStatus,
   StudentAssignment,
   WaitingListEntry,
+  WardenOverrideEntry,
 } from '../schemas/allocation-run.schema';
 import { RoommateProfile, RoommateProfileDocument } from '../schemas/roommate-profile.schema';
 import {
@@ -364,5 +365,265 @@ export class AllocationEngineService {
     return this.roommateModel
       .findOne({ tenantId, studentRollNumber: studentRollNumber.toUpperCase() })
       .exec();
+  }
+
+  /**
+   * Submit draft run for formal Warden Review
+   */
+  async submitForWardenReview(tenantId: string = 'univ-delhi-hostel', runId: string, submittedBy: string = 'admin@univ-delhi.ac.in') {
+    const run = await this.getRunById(tenantId, runId);
+    if (run.status === AllocationRunStatus.PUBLISHED) {
+      throw new BadRequestException('Cannot submit an already published allocation for review');
+    }
+    run.status = AllocationRunStatus.PENDING_WARDEN_REVIEW;
+    run.auditTrail.push({
+      action: 'PENDING_WARDEN_REVIEW',
+      by: submittedBy,
+      at: new Date(),
+      reason: 'Draft allocation formally submitted for Warden verification and review.',
+    });
+    return run.save();
+  }
+
+  /**
+   * Warden Manual Override: Reassign student room/bed with mandatory audit reason
+   */
+  async overrideStudentAssignment(
+    tenantId: string = 'univ-delhi-hostel',
+    runId: string,
+    payload: {
+      studentRollNumber: string;
+      targetBlockCode: string;
+      targetFloor?: number;
+      targetRoomNumber: string;
+      targetBedLabel: string;
+      overrideReason: string;
+      wardenEmail: string;
+    },
+  ) {
+    const run = await this.getRunById(tenantId, runId);
+    if (run.status === AllocationRunStatus.PUBLISHED) {
+      throw new BadRequestException('Cannot override assignments on an already published allocation');
+    }
+
+    if (!payload.overrideReason || payload.overrideReason.trim().length < 8) {
+      throw new BadRequestException('Mandatory override reason must be provided (at least 8 characters).');
+    }
+
+    const assignmentIndex = run.assignments.findIndex(
+      (a) => a.studentRollNumber.toUpperCase() === payload.studentRollNumber.toUpperCase(),
+    );
+
+    if (assignmentIndex === -1) {
+      throw new NotFoundException(`Student ${payload.studentRollNumber} not found in this allocation run.`);
+    }
+
+    const currentAssignment = run.assignments[assignmentIndex];
+    const prevBlock = currentAssignment.assignedBlockCode;
+    const prevRoom = currentAssignment.assignedRoomNumber;
+    const prevBed = currentAssignment.assignedBedLabel;
+
+    // Check if another student in this run is in target block/room/bed
+    const conflictStudentIndex = run.assignments.findIndex(
+      (a, idx) =>
+        idx !== assignmentIndex &&
+        a.assignedBlockCode === payload.targetBlockCode &&
+        a.assignedRoomNumber === payload.targetRoomNumber &&
+        a.assignedBedLabel.toUpperCase() === payload.targetBedLabel.toUpperCase(),
+    );
+
+    if (conflictStudentIndex !== -1) {
+      // Clean swap between the two students
+      const conflictStudent = run.assignments[conflictStudentIndex];
+      conflictStudent.assignedBlockCode = prevBlock;
+      conflictStudent.assignedRoomNumber = prevRoom;
+      conflictStudent.assignedBedLabel = prevBed;
+      conflictStudent.isOverridden = true;
+      conflictStudent.overrideReason = `System Bed Swap caused by Warden override of ${payload.studentRollNumber}`;
+      conflictStudent.overriddenBy = payload.wardenEmail;
+      conflictStudent.overriddenAt = new Date();
+    }
+
+    // Apply override to target student
+    currentAssignment.assignedBlockCode = payload.targetBlockCode;
+    if (payload.targetFloor !== undefined) {
+      currentAssignment.assignedFloor = payload.targetFloor;
+    }
+    currentAssignment.assignedRoomNumber = payload.targetRoomNumber;
+    currentAssignment.assignedBedLabel = payload.targetBedLabel;
+    currentAssignment.isOverridden = true;
+    currentAssignment.overrideReason = payload.overrideReason.trim();
+    currentAssignment.overriddenBy = payload.wardenEmail;
+    currentAssignment.overriddenAt = new Date();
+    currentAssignment.allocationExplanation = `${currentAssignment.allocationExplanation} [Warden Override: ${payload.overrideReason.trim()}]`;
+
+    // Record in run override history
+    run.overrideHistory.push({
+      studentRollNumber: currentAssignment.studentRollNumber,
+      studentName: currentAssignment.studentName,
+      previousBlockCode: prevBlock,
+      previousRoomNumber: prevRoom,
+      previousBedLabel: prevBed,
+      newBlockCode: payload.targetBlockCode,
+      newRoomNumber: payload.targetRoomNumber,
+      newBedLabel: payload.targetBedLabel,
+      overrideReason: payload.overrideReason.trim(),
+      overriddenBy: payload.wardenEmail,
+      overriddenAt: new Date(),
+    });
+
+    // Append to audit trail
+    run.auditTrail.push({
+      action: 'WARDEN_OVERRIDE',
+      by: payload.wardenEmail,
+      at: new Date(),
+      reason: `Warden Override for ${currentAssignment.studentName} (${currentAssignment.studentRollNumber}): Moved from ${prevBlock}-${prevRoom}-${prevBed} -> ${payload.targetBlockCode}-${payload.targetRoomNumber}-${payload.targetBedLabel}. Reason: ${payload.overrideReason.trim()}`,
+    });
+
+    return run.save();
+  }
+
+  /**
+   * Warden Approval: Formally approve draft allocation
+   */
+  async approveAllocation(
+    tenantId: string = 'univ-delhi-hostel',
+    runId: string,
+    payload: { wardenEmail: string; approvalNotes?: string },
+  ) {
+    const run = await this.getRunById(tenantId, runId);
+    if (run.status === AllocationRunStatus.PUBLISHED) {
+      throw new BadRequestException('This allocation is already published');
+    }
+
+    run.status = AllocationRunStatus.APPROVED;
+    run.approvedBy = payload.wardenEmail || 'warden@univ-delhi.ac.in';
+    run.approvedAt = new Date();
+
+    run.auditTrail.push({
+      action: 'APPROVED',
+      by: run.approvedBy,
+      at: run.approvedAt,
+      reason: payload.approvalNotes?.trim() || 'Warden reviewed allocations, compatibility scores and authorized approval.',
+    });
+
+    return run.save();
+  }
+
+  /**
+   * Warden Rejection: Return draft for correction or re-running
+   */
+  async rejectAllocation(
+    tenantId: string = 'univ-delhi-hostel',
+    runId: string,
+    payload: { wardenEmail: string; rejectionReason: string },
+  ) {
+    const run = await this.getRunById(tenantId, runId);
+    if (run.status === AllocationRunStatus.PUBLISHED) {
+      throw new BadRequestException('Cannot reject an already published allocation');
+    }
+
+    if (!payload.rejectionReason || payload.rejectionReason.trim().length < 8) {
+      throw new BadRequestException('Mandatory rejection reason required for returning allocation draft.');
+    }
+
+    run.status = AllocationRunStatus.REJECTED_RETURNED;
+    run.rejectionReason = payload.rejectionReason.trim();
+
+    run.auditTrail.push({
+      action: 'REJECTED_RETURNED',
+      by: payload.wardenEmail || 'warden@univ-delhi.ac.in',
+      at: new Date(),
+      reason: payload.rejectionReason.trim(),
+    });
+
+    return run.save();
+  }
+
+  /**
+   * Authorized Publication: Final transition from APPROVED -> PUBLISHED
+   * STRICT GOVERNANCE RULE: Draft Allocation -> Pending Review -> Approved Allocation -> Published.
+   * Direct draft-to-published transition without approval record is strictly prohibited!
+   */
+  async publishAllocation(
+    tenantId: string = 'univ-delhi-hostel',
+    runId: string,
+    payload: { publishedBy: string; publishNotes?: string },
+  ) {
+    const run = await this.getRunById(tenantId, runId);
+
+    // Enforce governance rule
+    if (run.status !== AllocationRunStatus.APPROVED) {
+      throw new BadRequestException(
+        `Governance Violation: Cannot publish run in '${run.status}' state. Allocation must be formally APPROVED by the Warden first!`,
+      );
+    }
+
+    run.status = AllocationRunStatus.PUBLISHED;
+    run.publishedBy = payload.publishedBy || 'dean@univ-delhi.ac.in';
+    run.publishedAt = new Date();
+
+    // 1. Commit inventory bed occupancy
+    for (const assignment of run.assignments) {
+      try {
+        await this.bedModel.updateOne(
+          {
+            tenantId,
+            blockCode: assignment.assignedBlockCode,
+            roomNumber: assignment.assignedRoomNumber,
+            bedLabel: assignment.assignedBedLabel,
+          },
+          {
+            $set: {
+              status: BedStatus.BOOKED,
+              assignedStudentRollNumber: assignment.studentRollNumber,
+              assignedStudentName: assignment.studentName,
+            },
+          },
+        );
+      } catch (err) {
+        this.logger.warn(`Failed to mark bed occupied for ${assignment.studentRollNumber}: ${err.message}`);
+      }
+    }
+
+    // 2. Update Student Applications status to ALLOCATED
+    for (const assignment of run.assignments) {
+      try {
+        await this.applicationModel.updateOne(
+          {
+            tenantId,
+            cycleCode: run.cycleCode,
+            studentRollNumber: assignment.studentRollNumber,
+          },
+          {
+            $set: {
+              status: ApplicationStatus.ALLOCATED,
+              allocatedHostelName: assignment.assignedBlockCode,
+              allocatedRoomNumber: assignment.assignedRoomNumber,
+              allocatedBedLabel: assignment.assignedBedLabel,
+            },
+          },
+        );
+      } catch (err) {
+        this.logger.warn(`Failed to update application for ${assignment.studentRollNumber}: ${err.message}`);
+      }
+    }
+
+    run.auditTrail.push({
+      action: 'PUBLISHED',
+      by: run.publishedBy,
+      at: run.publishedAt,
+      reason: payload.publishNotes?.trim() || 'Official publication authorized. Student portal results and bed inventory unlocked.',
+    });
+
+    return run.save();
+  }
+
+  /**
+   * Get override history for an allocation run
+   */
+  async getOverrideHistory(tenantId: string = 'univ-delhi-hostel', runId: string) {
+    const run = await this.getRunById(tenantId, runId);
+    return run.overrideHistory || [];
   }
 }

@@ -9,6 +9,7 @@ export enum AllocationRunStatus {
   PENDING_WARDEN_REVIEW = 'PENDING_WARDEN_REVIEW',
   APPROVED = 'APPROVED',
   PUBLISHED = 'PUBLISHED',
+  REJECTED_RETURNED = 'REJECTED_RETURNED',
   FAILED = 'FAILED',
 }
 
@@ -67,6 +68,54 @@ export class StudentAssignment {
 
   @Prop({ required: true })
   allocationExplanation: string; // Detailed human-readable transparent explanation
+
+  @Prop({ default: false })
+  isOverridden?: boolean;
+
+  @Prop()
+  overrideReason?: string;
+
+  @Prop()
+  overriddenBy?: string;
+
+  @Prop()
+  overriddenAt?: Date;
+}
+
+@Schema({ _id: false })
+export class WardenOverrideEntry {
+  @Prop({ required: true, uppercase: true })
+  studentRollNumber: string;
+
+  @Prop({ required: true })
+  studentName: string;
+
+  @Prop({ required: true })
+  previousBlockCode: string;
+
+  @Prop({ required: true })
+  previousRoomNumber: string;
+
+  @Prop({ required: true })
+  previousBedLabel: string;
+
+  @Prop({ required: true })
+  newBlockCode: string;
+
+  @Prop({ required: true })
+  newRoomNumber: string;
+
+  @Prop({ required: true })
+  newBedLabel: string;
+
+  @Prop({ required: true })
+  overrideReason: string;
+
+  @Prop({ required: true })
+  overriddenBy: string;
+
+  @Prop({ default: () => new Date() })
+  overriddenAt: Date;
 }
 
 @Schema({ _id: false })
@@ -168,6 +217,24 @@ export class AllocationRun {
 
   @Prop({ type: [WaitingListEntry], default: [] })
   waitingList: WaitingListEntry[];
+
+  @Prop({ type: [WardenOverrideEntry], default: [] })
+  overrideHistory: WardenOverrideEntry[];
+
+  @Prop()
+  approvedBy?: string;
+
+  @Prop()
+  approvedAt?: Date;
+
+  @Prop()
+  publishedBy?: string;
+
+  @Prop()
+  publishedAt?: Date;
+
+  @Prop()
+  rejectionReason?: string;
 
   @Prop({ type: [AllocationAuditEntry], default: [] })
   auditTrail: AllocationAuditEntry[];

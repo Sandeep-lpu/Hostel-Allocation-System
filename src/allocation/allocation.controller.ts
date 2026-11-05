@@ -85,4 +85,94 @@ export class AllocationController {
   ) {
     return this.allocationService.getRoommateProfile(tenantId, rollNumber);
   }
+
+  /**
+   * Warden Governance: Submit draft run for Warden Review
+   */
+  @Post('runs/:runId/submit-review')
+  @HttpCode(HttpStatus.OK)
+  async submitForWardenReview(
+    @Param('runId') runId: string,
+    @Body() body: { submittedBy?: string },
+    @Query('tenantId') tenantId?: string,
+  ) {
+    return this.allocationService.submitForWardenReview(
+      tenantId,
+      runId,
+      body.submittedBy || 'admin@univ-delhi.ac.in',
+    );
+  }
+
+  /**
+   * Warden Governance: Manual override student room/bed assignment with mandatory reason
+   */
+  @Post('runs/:runId/override')
+  @HttpCode(HttpStatus.OK)
+  async overrideAssignment(
+    @Param('runId') runId: string,
+    @Body()
+    body: {
+      studentRollNumber: string;
+      targetBlockCode: string;
+      targetFloor?: number;
+      targetRoomNumber: string;
+      targetBedLabel: string;
+      overrideReason: string;
+      wardenEmail: string;
+    },
+    @Query('tenantId') tenantId?: string,
+  ) {
+    return this.allocationService.overrideStudentAssignment(tenantId, runId, body);
+  }
+
+  /**
+   * Warden Governance: Formally approve allocation draft
+   */
+  @Post('runs/:runId/approve')
+  @HttpCode(HttpStatus.OK)
+  async approveAllocation(
+    @Param('runId') runId: string,
+    @Body() body: { wardenEmail: string; approvalNotes?: string },
+    @Query('tenantId') tenantId?: string,
+  ) {
+    return this.allocationService.approveAllocation(tenantId, runId, body);
+  }
+
+  /**
+   * Warden Governance: Reject draft and send back for corrections
+   */
+  @Post('runs/:runId/reject')
+  @HttpCode(HttpStatus.OK)
+  async rejectAllocation(
+    @Param('runId') runId: string,
+    @Body() body: { wardenEmail: string; rejectionReason: string },
+    @Query('tenantId') tenantId?: string,
+  ) {
+    return this.allocationService.rejectAllocation(tenantId, runId, body);
+  }
+
+  /**
+   * Warden Governance: Authorized final publication
+   * Enforces mandatory approval state machine rule
+   */
+  @Post('runs/:runId/publish')
+  @HttpCode(HttpStatus.OK)
+  async publishAllocation(
+    @Param('runId') runId: string,
+    @Body() body: { publishedBy: string; publishNotes?: string },
+    @Query('tenantId') tenantId?: string,
+  ) {
+    return this.allocationService.publishAllocation(tenantId, runId, body);
+  }
+
+  /**
+   * Get override history for an allocation run
+   */
+  @Get('runs/:runId/overrides')
+  async getOverrides(
+    @Param('runId') runId: string,
+    @Query('tenantId') tenantId?: string,
+  ) {
+    return this.allocationService.getOverrideHistory(tenantId, runId);
+  }
 }
