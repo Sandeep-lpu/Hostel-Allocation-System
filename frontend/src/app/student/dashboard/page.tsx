@@ -17,6 +17,7 @@ import {
   ShieldCheck,
   RefreshCw,
   ArrowRight,
+  Printer,
 } from 'lucide-react';
 import { getStudentSession } from '@/lib/auth-cookies';
 import { logoutAction } from '@/app/actions/auth-actions';
@@ -324,6 +325,15 @@ export default async function StudentDashboardPage() {
                     <p className="text-xs text-emerald-800">
                       Congratulations! Your hostel room placement has been officially authorized by the Dean & Warden.
                     </p>
+                    <div className="pt-1.5">
+                      <Link
+                        href="/student/allotment-slip"
+                        className="inline-flex items-center space-x-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs transition-all"
+                      >
+                        <Printer className="h-3.5 w-3.5" />
+                        <span>View & Print Official Allotment Slip</span>
+                      </Link>
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -424,6 +434,15 @@ export default async function StudentDashboardPage() {
                     <p className="text-xs text-emerald-800">
                       A vacant bed in your preferred hostel block became available and was automatically allocated to your profile based on your priority rank.
                     </p>
+                    <div className="pt-1.5">
+                      <Link
+                        href="/student/allotment-slip"
+                        className="inline-flex items-center space-x-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs transition-all"
+                      >
+                        <Printer className="h-3.5 w-3.5" />
+                        <span>View & Print Official Allotment Slip</span>
+                      </Link>
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-3 gap-3">

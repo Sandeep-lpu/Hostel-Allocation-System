@@ -15,6 +15,7 @@ import { OutboundWebhooksModule } from './outbound-webhooks/outbound-webhooks.mo
 import { ObservabilityModule } from './observability/observability.module';
 import { AuthModule } from './auth/auth.module';
 import { ApplicationModule } from './application/application.module';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -129,6 +130,7 @@ import { ApplicationModule } from './application/application.module';
     ObservabilityModule,
     AuthModule,
     ApplicationModule,
+    ReportsModule,
   ],
   controllers: [],
   providers: [],

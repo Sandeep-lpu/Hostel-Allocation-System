@@ -112,3 +112,4 @@ export async function releaseBedAction(payload: {
     return { success: false, error: err.message || 'Network error releasing bed' };
   }
 }
+
