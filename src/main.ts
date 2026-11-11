@@ -16,9 +16,6 @@ async function bootstrap() {
       trustProxy: true,
       bodyLimit: 10 * 1024 * 1024, // 10MB
     }),
-    {
-      bufferLogs: true,
-    },
   );
 
   const configService = app.get(ConfigService);
